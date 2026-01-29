@@ -8,7 +8,7 @@
 		</div>
 
 		<div class="card">
-			<EmployeeTable :employees="controller.getAllEmployees()" @edit="openForm" @delete="deleteEmployee" />
+			<EmployeeTable :employees="employees" @edit="openForm" @delete="deleteEmployee" />
 		</div>
 
 		<EmployeeForm :visible="formVisible" :employee="selectedEmployee" @save="saveEmployee" @close="closeForm" />
@@ -26,11 +26,20 @@ export default {
 	data() {
 		return {
 			controller: new EmployeeController(),
+			employees: [],
 			formVisible: false,
 			selectedEmployee: {}
 		};
 	},
+	mounted() {
+		// Инициализируем список сотрудников после монтирования компонента
+		this.employees = this.controller.getAllEmployees();
+	},
 	methods: {
+		// Синхронизация локального массива с контроллером
+		syncEmployees() {
+			this.employees = [...this.controller.getAllEmployees()]; // Новый массив для реактивности
+		},
 		openForm(employee = {}) { // открытие формы
 			this.selectedEmployee = employee;
 			this.formVisible = true;
@@ -41,11 +50,14 @@ export default {
 			} else {
 				this.controller.addEmployee(employeeData);
 			}
+			this.syncEmployees(); // Синхронизируем после сохранения
 			this.closeForm();
 		},
 		deleteEmployee(id) {
 			if (confirm('Вы уверены, что хотите удалить этого сотрудника?')) {
+				
 				this.controller.deleteEmployee(id);
+				this.syncEmployees(); // Синхронизируем после удаления
 			}
 		},
 		closeForm() {

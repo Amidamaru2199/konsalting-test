@@ -104,7 +104,19 @@ export default class EmployeeController {
 
 	// удаление
 	deleteEmployee(id) {
+		console.log('Controller: удаляем сотрудника', id, 'тип:', typeof id);
+		console.log('Controller: до удаления:', this.employees.length, 'сотрудников');
+		console.log('Controller: ID всех сотрудников:', this.employees.map(e => ({ id: e.id, type: typeof e.id })));
+		
+		// Проверяем сравнение для отладки
+		this.employees.forEach(emp => {
+			console.log(`Сравнение: emp.id(${emp.id}, ${typeof emp.id}) !== id(${id}, ${typeof id}) = ${emp.id !== id}`);
+		});
+		
 		this.employees = this.employees.filter(emp => emp.id !== id); // фильтруем и возвращаем все кроме того кто совпал
+		
+		console.log('Controller: после удаления:', this.employees.length, 'сотрудников');
+		
 		this.saveToStorage(); // сохраняем после удаления
 	}
 
