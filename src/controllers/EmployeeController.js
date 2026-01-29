@@ -4,6 +4,59 @@ export default class EmployeeController {
 	constructor() {
 		this.storageKey = 'employees_data'; // ключ для локалстораджа
 		this.employees = this.loadFromStorage(); // загружаем данные при инициализации
+
+		// Если данных нет, добавляем моковы данные
+		if (this.employees.length === 0) {
+			this.initializeWithDemoData();
+		}
+	}
+
+	// Начальные данные
+	initializeWithDemoData() {
+		const demoEmployees = [
+			{
+				firstName: 'Иван',
+				lastName: 'Иванов',
+				age: 30,
+				experience: 5,
+				address: 'г. Москва, ул. Ленина, д. 10'
+			},
+			{
+				firstName: 'Мария',
+				lastName: 'Петрова',
+				age: 28,
+				experience: 3,
+				address: 'г. Санкт-Петербург, Невский пр., д. 25'
+			},
+			{
+				firstName: 'Алексей',
+				lastName: 'Сидоров',
+				age: 35,
+				experience: 10,
+				address: 'г. Казань, ул. Баумана, д. 15'
+			},
+			{
+				firstName: 'Елена',
+				lastName: 'Смирнова',
+				age: 32,
+				experience: 7,
+				address: 'г. Новосибирск, ул. Красный пр., д. 30'
+			},
+			{
+				firstName: 'Дмитрий',
+				lastName: 'Козлов',
+				age: 27,
+				experience: 2,
+				address: 'г. Екатеринбург, ул. Малышева, д. 5'
+			}
+		];
+
+		demoEmployees.forEach(empData => {
+			const employee = new Employee(empData);
+			this.employees.push(employee);
+		});
+
+		this.saveToStorage(); // сохраняем данные в локалсторадже
 	}
 
 	// загрузка данных из localStorage
@@ -29,7 +82,7 @@ export default class EmployeeController {
 			console.error('Ошибка сохранения данных в localStorage:', error);
 		}
 	}
-	
+
 	// добавление сотрудника
 	addEmployee(employeeData) {
 		// console.log(employeeData);
